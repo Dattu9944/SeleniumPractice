@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "firstName", "lastName", "email", "username", "phone", "company", "createdAt"],
+  "properties": {
+    "id": {"type": "integer", "minimum": 1},
+    "firstName": {"type": "string", "minLength": 1},
+    "lastName": {"type": "string", "minLength": 1},
+    "email": {"type": "string", "minLength": 3},
+    "username": {"type": "string", "minLength": 1},
+    "phone": {"type": "string", "minLength": 1},
+    "company": {"type": "string", "minLength": 1},
+    "createdAt": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
+

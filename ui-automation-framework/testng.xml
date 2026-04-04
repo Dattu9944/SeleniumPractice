@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="StandaloneUiAutomationSuite" verbose="1" parallel="none">
+    <test name="CoreUiTests">
+        <classes>
+            <class name="com.example.ui.tests.LoginTest"/>
+            <class name="com.example.ui.runners.UiCucumberRunner"/>
+        </classes>
+    </test>
+</suite>

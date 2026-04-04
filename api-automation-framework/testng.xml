@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="StandaloneApiAutomationSuite" verbose="1" parallel="none">
+
+    <test name="PositiveAndNegativeApiTests">
+        <classes>
+            <class name="com.example.api.tests.UserPositiveTest"/>
+            <class name="com.example.api.tests.UserNegativeTest"/>
+        </classes>
+    </test>
+</suite>
+
