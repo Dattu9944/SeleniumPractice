@@ -21,6 +21,11 @@ public class LoginSteps {
         loginPage = new LoginPage(DriverManager.getDriver());
     }
 
+    //Do changes on login
+    public void newTestMethod(){
+        newTestMethod();
+    }
+
     @When("I log in with username {string} and password {string}")
     public void iLogInWithUsernameAndPassword(String username, String password) {
         ensurePageLoaded();
