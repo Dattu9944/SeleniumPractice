@@ -1,11 +1,12 @@
-# Automation Framework Guide (API + UI)
+# Automation Framework Guide (API + UI + Mobile)
 
-This workspace contains **two separate automation projects**:
+This workspace contains **three separate automation projects**:
 
 - `api-automation-framework` for API testing
 - `ui-automation-framework` for Selenium UI testing
+- `mobile-automation-framework` for Appium mobile testing
 
-Use this guide as the quick onboarding document for both.
+Use this guide as the quick onboarding document for all three.
 
 ---
 
@@ -14,10 +15,11 @@ Use this guide as the quick onboarding document for both.
 ```text
 SeleniumPractice/
 ├── api-automation-framework/
-└── ui-automation-framework/
+├── ui-automation-framework/
+└── mobile-automation-framework/
 ```
 
-Both are standalone Maven projects with their own `pom.xml`, `testng.xml`, source code, and resources.
+All three are standalone Maven projects with their own `pom.xml`, `testng.xml`, source code, and resources.
 
 ---
 
@@ -128,9 +130,53 @@ mvn clean test -Dtest=LinkedInTest -Drun.linkedin.tests=true -Dheadless=true
 
 ---
 
-## 4) Reporting
+## 4) Mobile Project Overview
 
-Both projects support TestNG/Surefire output in `target/surefire-reports`.
+Project: `mobile-automation-framework`
+
+### Purpose
+- Android mobile functional validation with Appium + TestNG
+- POM-based mobile page classes
+- Config-driven capabilities and environment profiles
+
+### Architecture
+- `pages` -> page objects (`LoginPage`)
+- `utils` -> config utility (`ConfigReader`)
+- `base` -> driver setup/teardown (`BaseTest`)
+- `tests` -> TestNG test classes
+- `resources` -> env configs (`config-dev.properties`, `config-qa.properties`, `config-prod.properties`)
+
+### Key Files
+- `mobile-automation-framework/src/test/java/com/example/mobile/base/BaseTest.java`
+- `mobile-automation-framework/src/main/java/com/example/mobile/pages/LoginPage.java`
+- `mobile-automation-framework/src/test/java/com/example/mobile/tests/LoginTest.java`
+
+### Config
+Important properties:
+- `run.mobile.tests`
+- `appium.server.url`
+- `platformName`
+- `deviceName`
+- `automationName`
+- `app.path` or `app.package` + `app.activity`
+
+### Run Mobile Tests
+```bash
+cd /Users/dineshdattasanka/IdeaProjects/SeleniumPractice/mobile-automation-framework
+mvn clean test
+```
+
+Run against active Appium server:
+```bash
+cd /Users/dineshdattasanka/IdeaProjects/SeleniumPractice/mobile-automation-framework
+mvn clean test -Drun.mobile.tests=true -Dappium.server.url=http://127.0.0.1:4723
+```
+
+---
+
+## 5) Reporting
+
+All projects support TestNG/Surefire output in `target/surefire-reports`.
 
 Allure plugins are configured in each project `pom.xml`.
 
@@ -141,7 +187,7 @@ mvn allure:report
 
 ---
 
-## 5) Which Project Should You Use?
+## 6) Which Project Should You Use?
 
 Use `api-automation-framework` when:
 - validating endpoints, status codes, response models, schemas
@@ -153,12 +199,18 @@ Use `ui-automation-framework` when:
 - checking page interactions and UI behavior
 - running smoke checks on external pages (LinkedIn)
 
+Use `mobile-automation-framework` when:
+- validating Android native app flows
+- checking interactions on real/emulated mobile devices
+- running Appium-based smoke/regression for app screens
+
 ---
 
-## 6) Recommended Daily Workflow
+## 7) Recommended Daily Workflow
 
 1. Start with API checks for service stability.
-2. Run UI regression/smoke for user journey validation.
-3. Keep API and UI commits isolated by project folder.
-4. Use profile flags (`dev`, `qa`, `prod`) for environment switching.
+2. Run UI regression/smoke for browser journey validation.
+3. Run mobile smoke/regression on emulator/device when app build is available.
+4. Keep API, UI, and Mobile commits isolated by project folder.
+5. Use profile flags (`dev`, `qa`, `prod`) for environment switching.
 
