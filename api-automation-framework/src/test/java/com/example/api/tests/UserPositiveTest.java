@@ -53,5 +53,37 @@ public class UserPositiveTest extends BaseTest {
         Assert.assertNotNull(responseBody.getPhone(), "Phone should not be null.");
         getUserResponse.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/user-response-schema.json"));
     }
+
+    @Test(priority = 3, dependsOnMethods = "testCreateUser", description = "Fetch the created user and validate all fields match the original payload exactly.")
+    @Story("Get User")
+    @Description("Fetches the created user and performs a full field-by-field comparison against the original request payload.")
+    public void testGetUserReturnsAllFields() {
+        Response getUserResponse = userAPI.getUser(authenticatedRequestSpecification, createdUserId);
+        UserResponse responseBody = getUserResponse.as(UserResponse.class);
+
+        Assert.assertEquals(getUserResponse.getStatusCode(), 200, "Unexpected get user status code.");
+        Assert.assertEquals(responseBody.getId(), createdUserId, "User id mismatch.");
+        Assert.assertEquals(responseBody.getFirstName(), createdUserPayload.getFirstName(), "First name mismatch.");
+        Assert.assertEquals(responseBody.getLastName(), createdUserPayload.getLastName(), "Last name mismatch.");
+        Assert.assertEquals(responseBody.getEmail(), createdUserPayload.getEmail(), "Email mismatch.");
+        Assert.assertEquals(responseBody.getUsername(), createdUserPayload.getUsername(), "Username mismatch.");
+        Assert.assertEquals(responseBody.getPhone(), createdUserPayload.getPhone(), "Phone mismatch.");
+        Assert.assertEquals(responseBody.getCompany(), createdUserPayload.getCompany(), "Company mismatch.");
+        Assert.assertNotNull(responseBody.getCreatedAt(), "createdAt should not be null.");
+    }
+
+    @Test(priority = 4, description = "Create a second independent user and verify it receives a unique id different from the first created user.")
+    @Story("Create User")
+    @Description("Creates a second user independently and asserts that the assigned id is unique and different from the previously created user.")
+    public void testCreateSecondUserHasUniqueId() {
+        UserRequest secondUserPayload = UserPayloadBuilder.buildValidUser(testData);
+        Response createUserResponse = userAPI.createUser(authenticatedRequestSpecification, secondUserPayload);
+        int secondUserId = createUserResponse.jsonPath().getInt("id");
+
+        Assert.assertEquals(createUserResponse.getStatusCode(), 201, "Unexpected status code for second user creation.");
+        Assert.assertTrue(secondUserId > 0, "Second user id should be greater than zero.");
+        Assert.assertNotEquals(secondUserId, createdUserId, "Second user id should be unique and differ from the first.");
+        createUserResponse.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/user-response-schema.json"));
+    }
 }
 
